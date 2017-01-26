@@ -3,7 +3,7 @@ import requests
 import re
 
 res = requests.get("https://search.naver.com/search.naver?where=nexearch&query=%ED%99%98%EC%9C%A8&sm=top_hty&fbm=1&ie=utf8")
-country = '''<span>([가-힣]+) <em>'''
+country = '''<span>([가-힣]+) <em>(\w+)'''
 cou = re.compile(country)
 cou_list = cou.findall(res.text)
 
@@ -26,15 +26,22 @@ url = '''href="(http:\/\/info.finance.naver.com\/marketindex\/exchangeDetail.nhn
 u = re.compile(url)
 url_list = u.findall(res.text)
 
+time = '''<em>([\d\.]+ [\d:]+)<\/em> ([\d, 가-힣]+)<\/p> <\/div> <\/div> <\/div>'''
+t = re.compile(time)
+time_list = t.findall(res.text)
+
+flag = ['USD', 'JPY', 'EUR', 'CNY', 'AUD', 'CAD', 'NZD']
+
 f=codecs.open("index.html", 'w', 'utf-8')
 
 f.write("""<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>주요국가환율</title>
 </head>
 <body>
+<h1>주요국가환율</h1>
 <table border="1">
     <tr>
         <th>국가</th>
@@ -48,8 +55,8 @@ f.write("""<!DOCTYPE html>
         """)
 
 for i in range(7):
-    f.write('<tr align = "right"> <td>'
-            + '<a href="' + url_list[i] + '">' + cou_list[i] + "</a> </td> <td>"
+    f.write('<tr align = "right"> <td align = "left">'
+            + '<a href="' + url_list[i] + '">' + '<img src="http://imgfinance.naver.net/nfinance/flag/flag_' + cou_list[i][1] + '.png">' + cou_list[i][0] + "</a> </td> <td>"
             + rate_list[i] + "</td> <td>"
             + (yes_list[i])[0]+(yes_list[i])[1] + "</td> <td>"
             + (rem_list[i])[0] + "</td> <td>"
@@ -58,6 +65,8 @@ for i in range(7):
             + (rem_list[i])[5] + "</td> <td>"
             + (rem_list[i])[7] + "</td> </tr>")
 
-f.write("""</table> </body> </html>""")
-
+f.write("</table> <br>")
+f.write("<p>현재시각 : " + time_list[0][0] + " (" + time_list[0][1] + ")</p>")
+f.write(""" <a href="http://info.finance.naver.com/marketindex/?tabSel=exchange#tab_section">환율 더보기</a>""")
+f.write("</body> </html>")
 f.close()
