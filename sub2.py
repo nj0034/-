@@ -30,8 +30,6 @@ time = '''<em>([\d\.]+ [\d:]+)<\/em> ([\d, 가-힣]+)<\/p> <\/div> <\/div> <\/di
 t = re.compile(time)
 time_list = t.findall(res.text)
 
-flag = ['USD', 'JPY', 'EUR', 'CNY', 'AUD', 'CAD', 'NZD']
-
 f=codecs.open("index.html", 'w', 'utf-8')
 
 f.write("""<!DOCTYPE html>
