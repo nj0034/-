@@ -46,6 +46,7 @@ f.write("""<!DOCTYPE html>
         <th>송금(보낼때)</th>
         <th>송금(받을때)</th>
         """)
+
 for i in range(7):
     f.write('<tr align = "right"> <td>'
             + '<a href="' + url_list[i] + '">' + cou_list[i] + "</a> </td> <td>"
