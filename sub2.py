@@ -7,7 +7,6 @@ country = '''<span>([가-힣]+) <em>'''
 cou = re.compile(country)
 cou_list = cou.findall(res.text)
 
-
 rate = '''<strong>([\d\,\.]+)<\/strong> <span>'''
 r = re.compile(rate)
 rate_list = r.findall(res.text)
@@ -23,6 +22,9 @@ remain = '''<span class="percent \w+">(.?\d.\d+%)<\/span><\/td> <td>((\d,)?\d+.\
 rem = re.compile(remain)
 rem_list = rem.findall(res.text)
 
+url = '''href="(http:\/\/info.finance.naver.com\/marketindex\/exchangeDetail.nhn\?marketindexCd=FX_\w+)" target="_blank">[가-힣]+'''
+u = re.compile(url)
+url_list = u.findall(res.text)
 
 f=codecs.open("index.html", 'w', 'utf-8')
 
@@ -46,7 +48,7 @@ f.write("""<!DOCTYPE html>
         """)
 for i in range(7):
     f.write('<tr align = "right"> <td>'
-            + '<a href="http://info.finance.naver.com/marketindex/exchangeDetail.nhn?marketindexCd=FX_USDKRW">' + cou_list[i] + "</a> </td> <td>"
+            + '<a href="' + url_list[i] + '">' + cou_list[i] + "</a> </td> <td>"
             + rate_list[i] + "</td> <td>"
             + (yes_list[i])[0]+(yes_list[i])[1] + "</td> <td>"
             + (rem_list[i])[0] + "</td> <td>"
